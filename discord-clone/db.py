@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 ##from werkzeug.security import generate_password_hash
+from user import User
 
 client = MongoClient("your_mongodb_uri_here")
 
@@ -12,3 +13,7 @@ def save_user(username, email, password):
     users_collection.insert_one({'_id': username, 'email': email, 'password': password})
 
 save_user("Karim", "karim@gmail.com", "test123")
+
+def get_user(username):
+    user_data = users_collection.find_one({'_id': username})
+    return User(user_data['_id'], user_data['email'], user_data['password']) if user_data else None
