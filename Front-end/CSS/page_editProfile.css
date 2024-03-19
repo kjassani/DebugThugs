@@ -60,16 +60,6 @@ body{
 	margin-bottom: 1.5%;
 }
 
-#tempDiv{
-	position: absolute;
-	border-radius: 7px;
-	width: 57%;
-	height: 57%;
-	margin-top: 11%;
-	margin-left: 1.5%;
-	margin-right: 1.5%;
-	margin-bottom: 1.5%;
-}
 
 .info{
 	position: relative;
@@ -108,22 +98,14 @@ body{
 	border-radius: 7px;
 }
 
-#buttonDisp{
-	left: 88%;
+#pfp{
+	margin-top: 3%;
+	width: 9em;
+	left: 80%;
 }
 
-#buttonUser{
-	margin-top: 4%;
-	left: 88%;
-}
-
-#buttonEmail{
-	margin-top: 4%;
-	left: 88%;
-}
-
-#buttonPass{
-	margin-top: 4%;
+#save{
+	margin-top: 24%;
 	left: 88%;
 }
 
@@ -181,6 +163,20 @@ body{
 	background-color: #63676d;
 }
 
-body.settings #myAccountBtn{
+body.editProfile #editProfileBtn{
 	background-color:#424549;
 }
+
+#bio{
+	position: absolute;
+	padding: 10px;
+	line-height: 1.5;
+	border-radius: 7px;
+	z-index: 1;
+	background-color: #36393E;
+	color: white;
+	border: none;
+	margin-left: 2.5%;
+	top: 5em;
+}
+
