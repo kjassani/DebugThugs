@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_login import current_user, login_user, login_required, logout_user, LoginManager
-from db import get_user
-
+from db import get_user, save_user
+from pymongo.errors import DuplicateKeyError
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -35,7 +35,26 @@ def login():
             message = 'Invalid Login'
     return render_template('login.html', message=message)
 
-@app.route("/logout/")
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+
+    message = ''
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        try:
+            save_user(username, email, password)
+            return redirect(url_for('login'))
+        except DuplicateKeyError:
+            message = "Username taken! Please choose another username."
+    return render_template('signup.html', message=message)
+
+
+@app.route("/logout", methods=["POST"])
 @login_required
 def logout():
     logout_user()
