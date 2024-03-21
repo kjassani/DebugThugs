@@ -1,7 +1,7 @@
 import unittest
 from werkzeug.security import generate_password_hash, check_password_hash
 from user import User
-from db import save_user, get_user, users_collection
+from db import save_user, get_user, users_collection, delete_user
 from pymongo.errors import DuplicateKeyError
 from main import app
 from flask import Flask, render_template, request, redirect, url_for
@@ -22,18 +22,18 @@ class UserTest(unittest.TestCase):
         hashed_password = generate_password_hash(password)
         self.assertTrue(check_password_hash(hashed_password, password))
 
-    def test_save_user(self):
-        user = User(username='testuser', password='password123')
-        save_user(user)
-        saved_user = get_user('testuser')
-        self.assertEqual(saved_user.username, 'testuser')
-
     def test_duplicate_user(self):
-        user = User(username='testuser', password='password123')
+        delete_user('zain')
+        save_user(username='zain',email='j@i.com', password='password123')
         with self.assertRaises(DuplicateKeyError):
-            save_user(user)
+            save_user(username='zain',email='j@i.com', password='password123')
+            
+    def test_get_userid(self):
+        usern = get_user('zain')
+        self.assertEqual(usern.get_id(), 'zain')
+    def test_login(self):
+        response = self.app.post('/login', data=dict(username='zain', password='password123'), follow_redirects=True)
 
-    # Add more test cases as needed
 
 if __name__ == '__main__':
     unittest.main()
