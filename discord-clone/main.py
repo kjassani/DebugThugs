@@ -2,8 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_login import current_user, login_user, login_required, logout_user, LoginManager
 from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_members, \
-    remove_room_members, update_room, is_room_admin, save_room
+    remove_room_members, update_room, is_room_admin, save_room, get_messages, save_message
 from pymongo.errors import DuplicateKeyError
+from datetime import datetime
+
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -82,24 +84,6 @@ def create_room():
             message = "Failed to create room"
     return render_template('create_room.html', message=message)
 
-@app.route('/create-room/', methods=['GET', 'POST'])
-@login_required
-def create_room():
-    message = ''
-    if request.method == 'POST':
-        room_name = request.form.get('room_name')
-        usernames = [username.strip() for username in request.form.get('members').split(',')]
-
-        if len(room_name) and len(usernames):
-            room_id = save_room(room_name, current_user.username)
-            if current_user.username in usernames:
-                usernames.remove(current_user.username)
-            add_room_members(room_id, room_name, usernames, current_user.username)
-            return redirect(url_for('view_room', room_id=room_id))
-        else:
-            message = "Failed to create room"
-    return render_template('create_room.html', message=message)
-
 @app.route('/rooms/<room_id>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_room(room_id):
@@ -142,6 +126,7 @@ def handle_send_message_event(data):
         app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
                                                                     data['room'],
                                                                     data['message']))
+        save_message(data['room'], data['message'], data['username'])
         socketio.emit('receive_message', data, room=data['room'])
 
  
