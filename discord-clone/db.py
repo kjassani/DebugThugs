@@ -65,6 +65,12 @@ def is_room_admin(room_id, username):
 def save_message(room_id, text, sender):
     messages_collection.insert_one({'room_id': room_id, 'text': text, 'sender': sender, 'message_time': datetime.now()})
 
-def get_messages(room_id):
-    return list(messages_collection.find({'room_id': room_id}))
-    
+message_limit = 3
+
+def get_messages(room_id, page=0):
+    offset_value = page * message_limit
+    messages = list(
+        messages_collection.find({'room_id': room_id}).sort('_id', DESCENDING).limit(message_limit).skip(offset_value))
+    for message in messages:
+        message['message_time'] = message['message_time'].strftime("%d %b, %H:%M")
+    return messages[::-1] #the -1 makes the messages be displayed in the right order

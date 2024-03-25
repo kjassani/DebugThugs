@@ -5,7 +5,7 @@ from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member
     remove_room_members, update_room, is_room_admin, save_room, get_messages, save_message
 from pymongo.errors import DuplicateKeyError
 from datetime import datetime
-
+from bson.json_util import dumps
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -122,11 +122,23 @@ def view_room(room_id):
     else:
         return "Room not found", 404
     
+@app.route('/rooms/<room_id>/messages/')
+@login_required
+def get_old_messages(room_id):
+    room = get_room(room_id)
+    if room and is_room_member(room_id, current_user.username):
+        page = int(request.args.get('page', 0)) #0th page if page is not specified
+        messages = get_messages(room_id, page)
+        return dumps(messages)
+    else:
+        return "Room not found", 404
+
 @socketio.on('send_message')
 def handle_send_message_event(data):
         app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
                                                                     data['room'],
                                                                     data['message']))
+        data['message_time'] = datetime.now().strftime("%d %b, %H:%M")
         save_message(data['room'], data['message'], data['username'])
         socketio.emit('receive_message', data, room=data['room'])
 

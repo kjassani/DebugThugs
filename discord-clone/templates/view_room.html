@@ -9,10 +9,13 @@
     
 <h1>Welcome to chat room: {{ room.name }}</h1>
 
+<button type="button" id="load_old_messages">Load Older Messages</button>
+
 <div id="messages">
     {% for message in messages %}
-        <div><b>{{ message.sender }}&nbsp;</b> {{ message.text }}</div>
+        <div><b>{{ message.sender }}&nbsp;[{{ message.message_time }}]:&nbsp;</b> {{ message.text }}</div>
     {% endfor %}
+
 </div>
 
 <form id="message_input_form">
@@ -56,6 +59,21 @@
         }
     });
 
+    let page = 0;
+
+    document.getElementById("load_old_messages").onclick = (e) => {
+        page += 1;
+        fetch("/rooms/{{ room._id }}/messages?page=" + page, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+            }).then(response => {
+            response.json().then(messages => {
+                messages.reverse().forEach(message => prepend_message(message.text, message.sender, message.message_time));
+            })
+        })
+    };
 
     function prepend_message(message, username, created_at) {
         const newNode = document.createElement('div');
