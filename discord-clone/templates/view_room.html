@@ -11,8 +11,9 @@
 
 <div id="messages">
     {% for message in messages %}
-        <div><b>{{ message.sender }}&nbsp;</b> {{ message.text }}</div>
+        <div><b>{{ message.sender }}&nbsp;[{{ message.message_time }}]:&nbsp;</b> {{ message.text }}</div>
     {% endfor %}
+
 </div>
 
 <form id="message_input_form">

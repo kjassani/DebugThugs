@@ -127,6 +127,7 @@ def handle_send_message_event(data):
         app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
                                                                     data['room'],
                                                                     data['message']))
+        data['message_time'] = datetime.now().strftime("%d %b, %H:%M")
         save_message(data['room'], data['message'], data['username'])
         socketio.emit('receive_message', data, room=data['room'])
 

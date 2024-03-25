@@ -67,4 +67,6 @@ def save_message(room_id, text, sender):
 
 def get_messages(room_id):
     return list(messages_collection.find({'room_id': room_id}))
-    
+    for message in messages:
+        message['message_time'] = message['message_time'].strftime("%d %b, %H:%M")
+    return messages
