@@ -64,4 +64,7 @@ def is_room_admin(room_id, username):
     
 def save_message(room_id, text, sender):
     messages_collection.insert_one({'room_id': room_id, 'text': text, 'sender': sender, 'message_time': datetime.now()})
+
+def get_messages(room_id):
+    return list(messages_collection.find({'room_id': room_id}))
     
