@@ -60,3 +60,6 @@ def is_room_member(room_id, username):
 def is_room_admin(room_id, username):
     return members_collection.count_documents(
         {'_id': {'room_id': ObjectId(room_id), 'username': username}, 'is_room_admin': True})
+    
+def get_rooms_for_user(username):
+    return list(members_collection.find({'_id.username': username}))
