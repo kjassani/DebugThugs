@@ -3,6 +3,7 @@
   <head>
     <link rel="stylesheet" href="../CSS/reset.css">
     <link rel="stylesheet" href="../CSS/page_main.css">
+    <link rel="stylesheet" href="../CSS/page_friends_add.css">
   </head>
   <body>
   <div id="page">
@@ -42,15 +43,21 @@
           <button type="button">Pending</button>
         </div>
         <div class="nav_top_item">
-          <a href="page_friends_add.html"><button id="button_add_friend" type="button">Add Friend</button></a>
+          <button id="button_add_friend" type="button">Add Friend</button>
         </div>
       </div>
       <div id="content_main_body">
+        <div id="container_form">
+          <form id="form_friends_add">
+            <label for="fusername">Username:</label>
+            <input type="text" id="fusername" name="fname" placeholder="ExampleUser">
+          </form>
+          <br>
+          <button id="button_form_submit">Submit</button>
+          <a href="page_friends.html"><button id="button_form_cancel">Cancel</button></a>
+        </div>
       </div>
       <div id="content_main_footer">
-        <div id="chat_entry">
-            <textarea id="input_chat_entry" placeholder="Type a message!"></textarea>
-        </div>
       </div>
     </div>
   </div>

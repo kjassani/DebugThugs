@@ -1,0 +1,11 @@
+#content_main_body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#container_form{
+    background-color: #282B30;
+    padding: 2em;
+    border-radius: 1em;
+    color: white;
+}
