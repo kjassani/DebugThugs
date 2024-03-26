@@ -13,6 +13,9 @@ members_collection = chat_db.get_collection("members")
 messages_collection = chat_db.get_collection("messages")
 
 
+def get_rooms_for_user(username):
+    return list(members_collection.find({'_id.username': username}))
+
 def save_user(username, email, password):
     password_hash = generate_password_hash(password)
     users_collection.insert_one({'_id': username, 'email': email, 'password': password_hash})
