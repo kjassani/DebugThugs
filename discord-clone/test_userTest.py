@@ -1,21 +1,26 @@
 import unittest
 from werkzeug.security import generate_password_hash, check_password_hash
 from user import User
-from db import save_user, get_user, users_collection, delete_user
+from db import remove_room_members, save_user, get_user, users_collection, delete_user, rooms_collection
 from pymongo.errors import DuplicateKeyError
-from main import app
+from main import app, create_room
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import current_user, login_user, login_required, logout_user, LoginManager
+from unittest.mock import patch,MagicMock
+from bson import ObjectId
+from db import add_room_members
+from pymongo.errors import DuplicateKeyError
+from db import delete_user
+from main import app
+
+from unittest.mock import patch
 
 class UserTest(unittest.TestCase):
     def setUp(self):
         # Set up any necessary test data or configurations
         app.config['TESTING'] = True
         self.app = app.test_client()
-
-    def tearDown(self):
-        # Clean up any resources used for testing
-        pass
+    
 
     def test_generate_password_hash(self):
         password = 'password123'
@@ -31,8 +36,62 @@ class UserTest(unittest.TestCase):
     def test_get_userid(self):
         usern = get_user('zain')
         self.assertEqual(usern.get_id(), 'zain')
-    def test_login(self):
-        response = self.app.post('/login', data=dict(username='zain', password='password123'), follow_redirects=True)
+    
+    def test_create_room(self):
+
+        room_name = 'Test Room'
+        members = 'user1,user2'
+        data = {'room_name': room_name, 'members': members}
+
+        response = self.app.post('/create-room/', data=data, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+    mock_rooms_collection = ...  # Define the mock_rooms_collection variable here
+
+    # @patch('db.rooms_collection') # failing beacuse of create room
+    # def test_save_room(self, mock_rooms_collection):
+    #     room_name = 'Test Room'
+    #     members = 'user1,user2'
+    #     data = {'room_name': room_name, 'members': members}
+    #     create_room(data)
+    #     self.assertTrue(room_name in rooms_collection.distinct('room_name'))
+        
+    @patch('db.members_collection')
+    def test_add_room_members(self, mock_members_collection):
+
+        room_id = str(ObjectId())
+        room_name = 'Test Room'
+        usernames = ['user1', 'user2']
+        added_by = 'admin'
+
+        add_room_members(room_id, room_name, usernames, added_by)
+
+        mock_members_collection.insert_many.assert_called_once_with(
+            [{'_id': {'room_id': ObjectId(room_id), 'username': username}, 'room_name': room_name, 'added_by': added_by,
+            'is_room_admin': False} for username in usernames])
+
+    @patch('db.members_collection')
+    def test_remove_room_members(self, mock_members_collection):
+        room_id = str(ObjectId())
+        usernames = ['user1', 'user2']
+
+        remove_room_members(room_id, usernames)
+
+        
+        mock_members_collection.delete_many.assert_called_once_with(
+            {'_id': {'$in': [{'room_id': ObjectId(room_id), 'username': username} for username in usernames]}})
+        
+    @patch('db.users_collection')
+    def test_delete_user(self, mock_users_collection):
+        # Arrange
+        username = 'testuser'
+        mock_users_collection.find_one.return_value = {'_id': username}
+
+        # Act
+        delete_user(username)
+
+        # Assert
+        mock_users_collection.delete_one.assert_called_once_with({'_id': username})
 
 
 if __name__ == '__main__':

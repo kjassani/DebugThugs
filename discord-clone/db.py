@@ -65,15 +65,5 @@ def is_room_admin(room_id, username):
     return members_collection.count_documents(
         {'_id': {'room_id': ObjectId(room_id), 'username': username}, 'is_room_admin': True})
     
-def save_message(room_id, text, sender):
-    messages_collection.insert_one({'room_id': room_id, 'text': text, 'sender': sender, 'message_time': datetime.now()})
-
-message_limit = 3
-
-def get_messages(room_id, page=0):
-    offset_value = page * message_limit
-    messages = list(
-        messages_collection.find({'room_id': room_id}).sort('_id', DESCENDING).limit(message_limit).skip(offset_value))
-    for message in messages:
-        message['message_time'] = message['message_time'].strftime("%d %b, %H:%M")
-    return messages[::-1] #the -1 makes the messages be displayed in the right order
+def get_rooms_for_user(username):
+    return list(members_collection.find({'_id.username': username}))

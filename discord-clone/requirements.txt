@@ -3,3 +3,6 @@ flask-socketio
 eventlet
 pymongo
 Werkzeug
+bson
+unittest
+unittest.mock
