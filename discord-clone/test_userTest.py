@@ -12,6 +12,7 @@ from db import add_room_members
 from pymongo.errors import DuplicateKeyError
 from db import delete_user
 from main import app
+
 from unittest.mock import patch
 
 class UserTest(unittest.TestCase):
@@ -19,7 +20,7 @@ class UserTest(unittest.TestCase):
         # Set up any necessary test data or configurations
         app.config['TESTING'] = True
         self.app = app.test_client()
-
+    
 
     def test_generate_password_hash(self):
         password = 'password123'
@@ -79,6 +80,18 @@ class UserTest(unittest.TestCase):
         
         mock_members_collection.delete_many.assert_called_once_with(
             {'_id': {'$in': [{'room_id': ObjectId(room_id), 'username': username} for username in usernames]}})
+        
+    @patch('db.users_collection')
+    def test_delete_user(self, mock_users_collection):
+        # Arrange
+        username = 'testuser'
+        mock_users_collection.find_one.return_value = {'_id': username}
+
+        # Act
+        delete_user(username)
+
+        # Assert
+        mock_users_collection.delete_one.assert_called_once_with({'_id': username})
 
 
 if __name__ == '__main__':
