@@ -3,6 +3,9 @@ from flask_login import current_user, login_user, login_required, logout_user, L
 from flask_socketio import SocketIO, join_room, leave_room
 from pymongo.errors import DuplicateKeyError
 
+from flask_socketio import SocketIO, join_room, leave_room
+from pymongo.errors import DuplicateKeyError
+
 from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_members, \
     remove_room_members, update_room, is_room_admin, save_room
 
@@ -18,7 +21,9 @@ login_manager.init_app(app)
 def home():
     rooms = []
     if current_user.is_authenticated:
-        rooms = get_rooms_for_user(current_user.username)
+        if current_user.is_authenticated:
+            rooms = get_rooms_for_user(current_user.username)
+        return render_template("index.html", rooms=rooms)
     return render_template("index.html", rooms=rooms)
 
 
@@ -26,6 +31,7 @@ def home():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('home'))
+
 
     message = ''
     if request.method == 'POST':
@@ -37,6 +43,7 @@ def login():
             login_user(user)
             return redirect(url_for('home'))
         else:
+            message = 'Failed to login!'
             message = 'Failed to login!'
     return render_template('login.html', message=message)
 
@@ -56,14 +63,17 @@ def signup():
             return redirect(url_for('login'))
         except DuplicateKeyError:
             message = "User already exists!"
+            message = "User already exists!"
     return render_template('signup.html', message=message)
 
 
+@app.route("/logout/")
 @app.route("/logout/")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
 
 
 @app.route('/create-room/', methods=['GET', 'POST'])
@@ -83,6 +93,7 @@ def create_room():
         else:
             message = "Failed to create room"
     return render_template('create_room.html', message=message)
+
 
 
 @app.route('/rooms/<room_id>/edit', methods=['GET', 'POST'])
@@ -123,15 +134,25 @@ def view_room(room_id):
         return "Room not found", 404
 
 
+
+
 @socketio.on('send_message')
 def handle_send_message_event(data):
     app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
                                                                     data['room'],
                                                                     data['message']))
     socketio.emit('receive_message', data, room=data['room'])
+    
+
 
 
 @socketio.on('join_room')
+def handle_join_room_event(data):
+    app.logger.info("{} has joined the room {}".format(data['username'], data['room']))
+    join_room(data['room'])
+    socketio.emit('join_room_announcement', data, room=data['room'])
+
+
 def handle_join_room_event(data):
     app.logger.info("{} has joined the room {}".format(data['username'], data['room']))
     join_room(data['room'])
@@ -142,6 +163,9 @@ def handle_join_room_event(data):
 def handle_leave_room_event(data):
     app.logger.info("{} has left the room {}".format(data['username'], data['room']))
     leave_room(data['room'])
+    socketio.emit('leave_room_announcement', data, room=data['room'])
+
+
     socketio.emit('leave_room_announcement', data, room=data['room'])
 
 

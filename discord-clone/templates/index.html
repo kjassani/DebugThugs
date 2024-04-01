@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Discord Clone</title>
+    <title>Discord Clone</title>
 </head>
 <body>
+<h1>Discord Clone</h1>
+<h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3>
 <h1>Discord Clone</h1>
 <h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3>
 

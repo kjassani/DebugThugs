@@ -1,7 +1,8 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING
 from werkzeug.security import generate_password_hash
 from user import User
 from bson import ObjectId
+from datetime import datetime
 
 client = MongoClient("mongodb+srv://karimjassani24:test@discordclone.2m7im3b.mongodb.net/?retryWrites=true&w=majority&appName=discordClone")
 
@@ -9,8 +10,11 @@ chat_db = client.get_database("ChatDB")
 users_collection = chat_db.get_collection("users")
 rooms_collection = chat_db.get_collection("rooms")
 members_collection = chat_db.get_collection("members")
+messages_collection = chat_db.get_collection("messages")
 
 
+def get_rooms_for_user(username):
+    return list(members_collection.find({'_id.username': username}))
 
 def save_user(username, email, password):
     password_hash = generate_password_hash(password)

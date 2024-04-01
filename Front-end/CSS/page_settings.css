@@ -2,6 +2,7 @@ body{
 	padding: 0;
 	margin: 0;
 	background-color: #36393E;
+	font-family: sans-serif;
 }
 .top{
 	position: absolute;
@@ -137,6 +138,10 @@ body{
 	
 }
 
+.btnDesign:active{
+	background-color: #63676d;
+}
+
 #profilePicture{
 	width: 17%;
 	margin-top: 1.8%;
@@ -147,7 +152,7 @@ body{
 	position:relative;
 	top: 6%;
 	margin-left: 80%;
-	padding-bottom: 2%;
+
 }
 
 #sideTitle{
@@ -155,5 +160,27 @@ body{
 	font-weight: bold;
 }
 
+.sideBtn{
+	position: relative;
+	color: white;
+	font-size: 0.85em;
+	background-color: #282B30;
+	border: none;
+	width: 9em;
+	height: 3em;
+	margin-bottom: -1em;
+	text-align: left;
+	border-radius: 7px;
+}
 
+.sideBtn:hover{
+	background-color:#424549;
+}
 
+.sideBtn:active{
+	background-color: #63676d;
+}
+
+body.settings #myAccountBtn{
+	background-color:#424549;
+}
