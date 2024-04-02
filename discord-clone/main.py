@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_login import current_user, login_user, login_required, logout_user, LoginManager
-from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_members, \
-    remove_room_members, update_room, is_room_admin, save_room, get_messages, save_message
+from db import get_user, save_user, get_room, is_room_member, get_room_members, add_room_members, \
+    remove_room_members, update_room, is_room_admin, save_room, get_messages, save_message, get_rooms_for_user
 from pymongo.errors import DuplicateKeyError
 from datetime import datetime
 from bson.json_util import dumps
@@ -14,14 +14,14 @@ login_manager = LoginManager()
 login_manager.login_view = 'login'
 login_manager.init_app(app)
 
-
 @app.route('/')
 def home():
     rooms = []
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         rooms = get_rooms_for_user(current_user.username)
+    return render_template("index.html", rooms=rooms)
 
-    return render_template("index.html")
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

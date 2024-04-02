@@ -43,6 +43,9 @@ def update_room(room_id, room_name):
 def get_room(room_id):
     return rooms_collection.find_one({'_id': ObjectId(room_id)})
 
+def get_rooms_for_user(username):
+    return list(members_collection.find({'_id.username': username}))
+
 def add_room_members(room_id, room_name, usernames, added_by):
     members_collection.insert_many(
         [{'_id': {'room_id': ObjectId(room_id), 'username': username}, 'room_name': room_name, 'added_by': added_by,

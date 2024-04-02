@@ -33,7 +33,16 @@ class UserTest(unittest.TestCase):
         self.assertEqual(usern.get_id(), 'zain')
     def test_login(self):
         response = self.app.post('/login', data=dict(username='zain', password='password123'), follow_redirects=True)
-
+    
+    def test_save_message(self):
+        room_id = 1
+        text = 'hello'
+        sender = get_user('zain')
+        time = datetime.now()
+        save_message(room_id,text,sender) 
+        self.assertTrue({room_id, text, sender} in db.messages_collection)
+        
+        
 
 if __name__ == '__main__':
     unittest.main()
