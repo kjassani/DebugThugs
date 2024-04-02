@@ -6,7 +6,7 @@ function isBlank(inputField)
     }
     return false;
 }
-module.exports = isBlank
+
 function makeRed(inputDiv){
 	inputDiv.style.borderColor="#AA0000";
 }
@@ -66,6 +66,7 @@ function checkPasswordMatch(e){
         p.innerHTML = '<p id = "errorMsg"></p>';
         p.style.color = "red";
 
+
         var error = document.createTextNode("Passwords do not match");
         p.appendChild(error);
 
@@ -103,4 +104,3 @@ function oldPassCheck(e){
         window.alert("Successfully changed password");
     }
 }
-
