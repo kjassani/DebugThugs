@@ -93,6 +93,14 @@ class UserTest(unittest.TestCase):
         # Assert
         mock_users_collection.delete_one.assert_called_once_with({'_id': username})
 
+    def test_save_message(self):
+        room_id = 1
+        text = 'hello'
+        sender = get_user('zain')
+        time = datetime.now()
+        save_message(room_id,text,sender) 
+        self.assertTrue({room_id, text, sender} in db.messages_collection)
+        
 
 if __name__ == '__main__':
     unittest.main()
