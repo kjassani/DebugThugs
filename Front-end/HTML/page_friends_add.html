@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="../CSS/reset.css">
     <link rel="stylesheet" href="../CSS/page_main.css">
     <link rel="stylesheet" href="../CSS/page_friends_add.css">
+    <script type="text/javascript" src="../JAVASCRIPT/friends_add.js"></script>
   </head>
   <body>
   <div id="page">
@@ -33,27 +34,16 @@
         <div id="nav_top_title">
           <h1>Friends</h1>
         </div>
-        <div class="nav_top_item">
-          <button type="button">All</button>
-        </div>
-        <div class="nav_top_item">
-          <button type="button">Online</button>
-        </div>
-        <div class="nav_top_item">
-          <button type="button">Pending</button>
-        </div>
-        <div class="nav_top_item">
-          <button id="button_add_friend" type="button">Add Friend</button>
-        </div>
       </div>
       <div id="content_main_body">
         <div id="container_form">
-          <form id="form_friends_add">
+          <form action="" method="post" id="form_friends_add">
             <label for="fusername">Username:</label>
-            <input type="text" id="fusername" name="fname" placeholder="ExampleUser">
+            <input class="form_data" type="text" id="fusername" name="fname" placeholder="ExampleUser">
           </form>
+          <p id="display_username"></p>
           <br>
-          <button id="button_form_submit">Submit</button>
+          <button type="submit" onclick="getFriendToAdd()" id="button_form_submit">Submit</button>
           <a href="page_friends.html"><button id="button_form_cancel">Cancel</button></a>
         </div>
       </div>
