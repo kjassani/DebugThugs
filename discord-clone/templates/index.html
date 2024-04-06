@@ -1,25 +1,61 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Discord Clone</title>
-    <title>Discord Clone</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='page_main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
 </head>
 <body>
-<h1>Discord Clone</h1>
-<h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3>
-<h1>Discord Clone</h1>
-<h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3>
-
-{% if current_user.is_authenticated %}
-    <h3>My rooms</h3>
-    <ul>
-        {% for room in rooms %}
-            <li><a href="/rooms/{{ room._id.room_id }}">{{ room.room_name }}</a></li>
-        {% endfor %}
-    </ul>
-    <a href="/create-room" class="btn">Create Room</a>
-    <a href="/logout" class="btn">Logout</a>
-{% endif %}
+<div id="page">
+    <div id="sidebar">
+      <div id="sidebar_left">
+        <div id="but">
+            <a href="page_friends.html"><img src="{{ url_for('static', filename='icon_server.png') }}"></a>
+        </div>
+        <div id="but">
+            <a href="page_friends.html"><img src="{{ url_for('static', filename='icon_friends.png') }}"></a>
+        </div>
+      </div>
+      <div id="sidebar_right">
+        <div id="sidebar_right_header">
+          <h1>My Channels</h1>
+        </div>
+        <div id="sidebar_right_content">
+         
+          {% if current_user.is_authenticated %}
+            
+            <ul>
+                {% for room in rooms %}
+                    <li><a href="/rooms/{{ room._id.room_id }}">{{ room.room_name }}</a></li>
+                {% endfor %}
+            </ul>
+            <a href="/create-room" class="btn">Create Room</a>
+            <a href="/logout" class="btn">Logout</a>
+          {% endif %}
+        </div>
+        <div id="sidebar_right_footer">
+          <div id="profile_info"> <h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3></div>
+          <a href="page_editProfile.html"><img id="icon_settings" src="{{ url_for('static', filename='icon_settings.png') }}"></a>
+        </div>
+      </div>
+    </div>
+    <div id="content_main">
+      <div id="content_main_header">
+        <div id="top_title">
+          <h1>Main Server</h1>
+        </div>
+      </div>
+      <div id="content_main_body">
+        <!-- Content can be dynamically loaded here based on the selected room -->
+      </div>
+      <div id="content_main_footer">
+        <div id="chat_entry">
+            <textarea id="input_chat_entry" placeholder="Type a message!"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
