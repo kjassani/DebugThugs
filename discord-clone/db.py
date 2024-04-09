@@ -31,7 +31,6 @@ def save_room(room_name, created_by):
     add_room_member(room_id, room_name, created_by, created_by, is_room_admin=True)
     return room_id
 
-
 def update_room(room_id, room_name):
     rooms_collection.update_one({'_id': ObjectId(room_id)}, {'$set': {'name': room_name}})
     room_members_collection.update_many({'_id.room_id': ObjectId(room_id)}, {'$set': {'room_name': room_name}})
@@ -89,3 +88,4 @@ def get_messages(room_id, page=0):
     for message in messages:
         message['created_at'] = message['created_at'].strftime("%d %b, %H:%M")
     return messages[::-1]
+

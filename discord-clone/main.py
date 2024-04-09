@@ -31,8 +31,16 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
+        main_server_room_id = 9999
+        main_server_room = get_room(main_server_room_id)
+        main_server_messages = ''
+        if main_server_room:
+            main_server_messages = get_messages(main_server_room_id) 
+        else:
+            save_room("Main Server", current_user.username)
+            main_server_room = get_room(main_server_room_id)
+        add_room_members(main_server_room_id, "Main Server", current_user.username, "discord")
         return redirect(url_for('home'))
-
 
     message = ''
     if request.method == 'POST':
