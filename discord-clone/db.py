@@ -19,6 +19,8 @@ def save_user(username, email, password):
     password_hash = generate_password_hash(password)
     users_collection.insert_one({'_id': username, 'email': email, 'password': password_hash})
 
+def delete_user(username):
+    users_collection.delete_one({'_id': username})
 
 def get_user(username):
     user_data = users_collection.find_one({'_id': username})
@@ -39,6 +41,7 @@ def update_room(room_id, room_name):
 
 def get_room(room_id):
     return rooms_collection.find_one({'_id': ObjectId(room_id)})
+
 
 
 def add_room_member(room_id, room_name, username, added_by, is_room_admin=False):
