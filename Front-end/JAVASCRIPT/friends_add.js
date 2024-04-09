@@ -18,8 +18,11 @@ window.onload = function()
         // Display the entered username below the form
         document.getElementById("display_username").textContent = "Entered username: " + username;
         
-        // Clear the input field
+        // Clear the input field and reset to zero
         document.getElementById("fusername").value = "";
         }
+
+        //Input code to return username 
+        
       });
 }
