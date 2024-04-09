@@ -1,13 +1,15 @@
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for
 from flask_login import current_user, login_user, login_required, logout_user, LoginManager
 from flask_socketio import SocketIO, join_room, leave_room
 from pymongo.errors import DuplicateKeyError
+from bson.json_util import dumps
 
 from flask_socketio import SocketIO, join_room, leave_room
 from pymongo.errors import DuplicateKeyError
 
 from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_members, \
-    remove_room_members, update_room, is_room_admin, save_room
+    remove_room_members, update_room, is_room_admin, save_room, get_messages,save_message
 
 app = Flask(__name__)
 app.secret_key = "sfdjkafnk"
@@ -21,10 +23,9 @@ login_manager.init_app(app)
 def home():
     rooms = []
     if current_user.is_authenticated:
-        if current_user.is_authenticated:
-            rooms = get_rooms_for_user(current_user.username)
-        return render_template("index.html", rooms=rooms)
+        rooms = get_rooms_for_user(current_user.username)
     return render_template("index.html", rooms=rooms)
+    
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -44,7 +45,6 @@ def login():
             return redirect(url_for('home'))
         else:
             message = 'Failed to login!'
-            message = 'Failed to login!'
     return render_template('login.html', message=message)
 
 
@@ -63,11 +63,9 @@ def signup():
             return redirect(url_for('login'))
         except DuplicateKeyError:
             message = "User already exists!"
-            message = "User already exists!"
     return render_template('signup.html', message=message)
 
 
-@app.route("/logout/")
 @app.route("/logout/")
 @login_required
 def logout():
@@ -129,11 +127,23 @@ def view_room(room_id):
     room = get_room(room_id)
     if room and is_room_member(room_id, current_user.username):
         room_members = get_room_members(room_id)
-        return render_template('view_room.html', username=current_user.username, room=room, room_members=room_members)
+        messages = get_messages(room_id)
+        return render_template('view_room.html', username=current_user.username, room=room, room_members=room_members,
+                               messages=messages)
     else:
         return "Room not found", 404
 
 
+@app.route('/rooms/<room_id>/messages/')
+@login_required
+def get_older_messages(room_id):
+    room = get_room(room_id)
+    if room and is_room_member(room_id, current_user.username):
+        page = int(request.args.get('page', 0))
+        messages = get_messages(room_id, page)
+        return dumps(messages)
+    else:
+        return "Room not found", 404
 
 
 @socketio.on('send_message')
@@ -141,6 +151,8 @@ def handle_send_message_event(data):
     app.logger.info("{} has sent message to the room {}: {}".format(data['username'],
                                                                     data['room'],
                                                                     data['message']))
+    data['created_at'] = datetime.now().strftime("%d %b, %H:%M")
+    save_message(data['room'], data['message'], data['username'])
     socketio.emit('receive_message', data, room=data['room'])
     
 
@@ -153,19 +165,11 @@ def handle_join_room_event(data):
     socketio.emit('join_room_announcement', data, room=data['room'])
 
 
-def handle_join_room_event(data):
-    app.logger.info("{} has joined the room {}".format(data['username'], data['room']))
-    join_room(data['room'])
-    socketio.emit('join_room_announcement', data, room=data['room'])
-
 
 @socketio.on('leave_room')
 def handle_leave_room_event(data):
     app.logger.info("{} has left the room {}".format(data['username'], data['room']))
     leave_room(data['room'])
-    socketio.emit('leave_room_announcement', data, room=data['room'])
-
-
     socketio.emit('leave_room_announcement', data, room=data['room'])
 
 
