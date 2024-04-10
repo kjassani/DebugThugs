@@ -1,7 +1,7 @@
 import unittest
 from werkzeug.security import generate_password_hash, check_password_hash
 from user import User
-from db import remove_room_members, save_user, get_user, users_collection, delete_user, rooms_collection
+from db import remove_room_members, save_user, get_user, users_collection, delete_user, rooms_collection, save_message
 from pymongo.errors import DuplicateKeyError
 from main import app, create_room
 from flask import Flask, render_template, request, redirect, url_for
@@ -14,6 +14,7 @@ from db import delete_user
 from main import app
 
 from unittest.mock import patch
+from datetime import datetime
 
 class UserTest(unittest.TestCase):
     def setUp(self):
@@ -56,7 +57,7 @@ class UserTest(unittest.TestCase):
     #     create_room(data)
     #     self.assertTrue(room_name in rooms_collection.distinct('room_name'))
         
-    @patch('db.members_collection')
+    @patch('db.room_members_collection')
     def test_add_room_members(self, mock_members_collection):
 
         room_id = str(ObjectId())

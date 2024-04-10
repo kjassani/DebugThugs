@@ -8,6 +8,7 @@ from bson.json_util import dumps
 from flask_socketio import SocketIO, join_room, leave_room
 from pymongo.errors import DuplicateKeyError
 
+
 from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_members, \
     remove_room_members, update_room, is_room_admin, save_room, get_messages,save_message, get_all_users, \
     get_or_create_private_chat
@@ -145,8 +146,9 @@ def view_room(room_id):
     if room and is_room_member(room_id, current_user.username):
         room_members = get_room_members(room_id)
         messages = get_messages(room_id)
+        is_admin = is_room_admin(room_id, current_user.username)
         return render_template('view_room.html', username=current_user.username, room=room, room_members=room_members,
-                               messages=messages)
+                               messages=messages,is_room_admin=is_admin)
     else:
         return "Room not found", 404
 
