@@ -25,11 +25,37 @@ def get_user(username):
     return User(user_data['_id'], user_data['email'], user_data['password']) if user_data else None
 
 
-def save_room(room_name, created_by):
-    room_id = rooms_collection.insert_one(
-        {'name': room_name, 'created_by': created_by, 'created_at': datetime.now()}).inserted_id
-    add_room_member(room_id, room_name, created_by, created_by, is_room_admin=True)
+def save_room(room_name, created_by, is_private=False, members=None):
+    room_data = {
+        'name': room_name,
+        'created_by': created_by,
+        'created_at': datetime.now(),
+        'is_private': is_private
+    }
+    room_id = rooms_collection.insert_one(room_data).inserted_id
+    
+    # If it's a private chat, ensure both members are added. Otherwise, add the creator as the room member.
+    if members and is_private:
+        for username in members:
+            add_room_member(room_id, room_name, username, created_by, is_room_admin=(username == created_by))
+    else:
+        add_room_member(room_id, room_name, created_by, created_by, is_room_admin=True)
+    
     return room_id
+
+def get_or_create_private_chat(user1_username, user2_username):
+    # Sort usernames to ensure consistency in naming regardless of who initiates the chat
+    sorted_usernames = sorted([user1_username, user2_username])
+    room_name = "+".join(sorted_usernames)
+    
+    existing_room = rooms_collection.find_one({'name': room_name, 'is_private': True})
+    if existing_room:
+        return existing_room
+    else:
+        # Use the adjusted save_room function to create a private chat room
+        room_id = save_room(room_name, sorted_usernames[0], is_private=True, members=sorted_usernames)
+        return rooms_collection.find_one({'_id': room_id})
+
 
 
 def update_room(room_id, room_name):
@@ -39,6 +65,15 @@ def update_room(room_id, room_name):
 
 def get_room(room_id):
     return rooms_collection.find_one({'_id': ObjectId(room_id)})
+
+def get_all_users():
+    """
+    Fetch all users from the database, excluding their password for security.
+    """
+    users_cursor = users_collection.find({}, {'password': 0})  # Exclude passwords from the result
+    users = list(users_cursor)
+    return users
+
 
 
 def add_room_member(room_id, room_name, username, added_by, is_room_admin=False):
