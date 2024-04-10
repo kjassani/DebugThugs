@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, jsonify, render_template, request, redirect, url_for
 from flask_login import current_user, login_user, login_required, logout_user, LoginManager
 from flask_socketio import SocketIO, join_room, leave_room
 from pymongo.errors import DuplicateKeyError
@@ -9,7 +9,8 @@ from flask_socketio import SocketIO, join_room, leave_room
 from pymongo.errors import DuplicateKeyError
 
 from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_members, \
-    remove_room_members, update_room, is_room_admin, save_room, get_messages,save_message
+    remove_room_members, update_room, is_room_admin, save_room, get_messages,save_message, get_all_users, \
+    get_or_create_private_chat
 
 app = Flask(__name__)
 app.secret_key = "sfdjkafnk"
@@ -22,9 +23,25 @@ login_manager.init_app(app)
 @app.route('/')
 def home():
     rooms = []
+    users = []
     if current_user.is_authenticated:
         rooms = get_rooms_for_user(current_user.username)
-    return render_template("index.html", rooms=rooms)
+        users = get_all_users()  # Use the get_all_users method to fetch the list of users
+    return render_template("index.html", rooms=rooms, users=users)
+
+@app.route('/start_private_chat/<username>', methods=['GET'])
+@login_required
+def start_private_chat(username):
+    if current_user.username == username:
+        return jsonify({'error': 'Cannot start a chat with yourself.'}), 400
+
+    room = get_or_create_private_chat(current_user.username, username)
+    if room:
+        # Return the room_id in JSON format
+        return jsonify({'room_id': str(room['_id'])})
+    else:
+        return jsonify({'error': 'Unable to create or find a chat room.'}), 500
+
     
 
 
