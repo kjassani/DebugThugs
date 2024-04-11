@@ -154,3 +154,5 @@ def get_messages(room_id, page=0):
     for message in messages:
         message['created_at'] = message['created_at'].strftime("%d %b, %H:%M")
     return messages[::-1]
+
+
