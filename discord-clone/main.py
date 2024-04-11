@@ -10,7 +10,7 @@ from flask_socketio import SocketIO, join_room, leave_room
 from pymongo.errors import DuplicateKeyError
 
 
-from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_members, \
+from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_member, add_room_members, \
     remove_room_members, update_room, is_room_admin, save_room, get_messages,save_message, get_all_users, \
     get_or_create_private_chat, update_user_profile, add_room_admin, remove_room_admin, get_room_admins
 
@@ -110,6 +110,9 @@ def signup():
         last_name = request.form.get('last_name')
         try:
             save_user(username, email, password, name, last_name)
+            main_server_room_id = '6618489b14d6b21ccee19216'
+            main_server_room = get_room(main_server_room_id)
+            add_room_member(main_server_room_id, 'Main Server', username, 'admin2')
             return redirect(url_for('login'))
         except DuplicateKeyError:
             message = "User already exists!"
