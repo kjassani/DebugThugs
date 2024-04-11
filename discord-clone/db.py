@@ -14,10 +14,27 @@ rooms_collection = chat_db.get_collection("rooms")
 room_members_collection = chat_db.get_collection("members")
 messages_collection = chat_db.get_collection("messages")
 
-
-def save_user(username, email, password):
+    
+def save_user(username, email, password, name, last_name):
     password_hash = generate_password_hash(password)
-    users_collection.insert_one({'_id': username, 'email': email, 'password': password_hash})
+    users_collection.insert_one({
+        '_id': username,
+        'email': email,
+        'password': password_hash,
+        'name': name,
+        'last_name': last_name
+    })
+    
+def update_user_profile(username, email, name, last_name):
+    result = users_collection.update_one(
+        {'_id': username},
+        {'$set': {
+            'email': email,
+            'name': name,
+            'last_name': last_name
+        }}
+    )
+    return result.modified_count > 0
 
 def delete_user(username):
     users_collection.delete_one({'_id': username})
@@ -25,7 +42,7 @@ def delete_user(username):
 
 def get_user(username):
     user_data = users_collection.find_one({'_id': username})
-    return User(user_data['_id'], user_data['email'], user_data['password']) if user_data else None
+    return User(user_data['_id'], user_data['name'], user_data['last_name'], user_data['email'], user_data['password']) if user_data else None
 
 
 def save_room(room_name, created_by, is_private=False, members=None):
@@ -36,6 +53,7 @@ def save_room(room_name, created_by, is_private=False, members=None):
         'is_private': is_private
     }
     room_id = rooms_collection.insert_one(room_data).inserted_id
+       
     
     # If it's a private chat, ensure both members are added. Otherwise, add the creator as the room member.
     if members and is_private:
