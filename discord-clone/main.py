@@ -1,5 +1,6 @@
 from datetime import datetime
-from flask import Flask, jsonify, render_template, request, redirect, url_for
+from flask import Flask, jsonify, render_template, request, redirect, url_for, flash  
+
 from flask_login import current_user, login_user, login_required, logout_user, LoginManager
 from flask_socketio import SocketIO, join_room, leave_room
 from pymongo.errors import DuplicateKeyError
@@ -11,7 +12,7 @@ from pymongo.errors import DuplicateKeyError
 
 from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_members, \
     remove_room_members, update_room, is_room_admin, save_room, get_messages,save_message, get_all_users, \
-    get_or_create_private_chat, add_room_admin, remove_room_admin, get_room_admins
+    get_or_create_private_chat, update_user_profile, add_room_admin, remove_room_admin, get_room_admins
 
 app = Flask(__name__)
 app.secret_key = "sfdjkafnk"
@@ -23,12 +24,13 @@ login_manager.init_app(app)
 
 @app.route('/')
 def home():
+    message = request.args.get('message', '')
     rooms = []
     users = []
     if current_user.is_authenticated:
         rooms = get_rooms_for_user(current_user.username)
         users = get_all_users()  # Use the get_all_users method to fetch the list of users
-    return render_template("index.html", rooms=rooms, users=users)
+    return render_template("index.html", rooms=rooms, users=users, message = message)
 
 @app.route('/start_private_chat/<username>', methods=['GET'])
 @login_required
@@ -43,7 +45,35 @@ def start_private_chat(username):
     else:
         return jsonify({'error': 'Unable to create or find a chat room.'}), 500
 
+@app.route('/edit_profile')
+@login_required
+def edit_profile():
+    # Fetch current user details to pre-populate the form
+    user = get_user(current_user.username)
+    # username = user.username
+    # first_name = user.first_name
+    # last_name = user.last_name
+    if user:
+        return render_template('edit_profile.html', user=user)
+    else:
+        return "User not found", 404
+
+
+
     
+@app.route('/submit_edit_profile', methods=['POST'])
+@login_required
+def submit_edit_profile():
+    name = request.form.get('name')
+    last_name = request.form.get('last_name')
+    email = request.form.get('email')
+    
+    updated = update_user_profile(current_user.username, email, name, last_name)
+    if updated:
+        return redirect(url_for('home', message='Profile successfully updated'))
+    else:
+        return 'Error updating profile', 400
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -76,8 +106,10 @@ def signup():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
+        name = request.form.get('name')
+        last_name = request.form.get('last_name')
         try:
-            save_user(username, email, password)
+            save_user(username, email, password, name, last_name)
             return redirect(url_for('login'))
         except DuplicateKeyError:
             message = "User already exists!"

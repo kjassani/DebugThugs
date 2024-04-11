@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+    <!-- Ensure the CSS path is correct or adapt as needed -->
+    <!--link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"-->
+</head>
+<body>
+<div id="edit-profile-container">
+    <h1>Edit Profile</h1>
+    <form method="POST" action="/submit_edit_profile">
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <!-- Assuming username cannot be changed, display it as text -->
+            <p id="username">{{ user.username }}</p>
+        </div>
+        <div class="form-group">
+            <label for="first_name">First Name:</label>
+            <input type="text" id="name" name="name" value="{{ user.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+        <button type="submit">Update Profile</button>
+    </form>
+</div>
+</body>
+</html>

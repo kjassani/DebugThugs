@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
 </head>
 <body>
+<!-- Message Display Area -->
+{% if message %}
+<div id="message-container" style="background-color: #f8d7da; color: #721c24; text-align: center; padding: 10px; margin-bottom: 10px;">
+    {{ message }}
+</div>
+{% endif %}
+<div id="page">
 <div id="page">
     <div id="sidebar">
       <div id="sidebar_left">
@@ -50,10 +57,14 @@
           </div>
         </div>
         <div id="sidebar_right_footer">
-          <div id="profile_info"> <h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3></div>
-          <a href="page_editProfile.html"><img id="icon_settings" src="{{ url_for('static', filename='icon_settings.png') }}"></a>
+          <div id="profile_info">
+            <h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3>
+          </div>
+          <!-- Existing Settings Icon -->
+          <a href="edit_profile.html"><img id="icon_settings" src="{{ url_for('static', filename='icon_settings.png') }}"></a>
+          <!-- Add a direct link to the Edit Profile Page -->
+          <a href="/edit_profile" class="btn">Edit Profile</a>
         </div>
-      </div>
     </div>
     <div id="content_main">
       <div id="content_main_header">
@@ -87,7 +98,16 @@
           console.error('Error starting private chat:', error);
           alert('Error starting private chat. Please try again.');
       });
-  }  
+  }
+    window.onload = function() {
+        const messageContainer = document.getElementById('message-container');
+        if (messageContainer) {
+            setTimeout(function() {
+                messageContainer.style.display = 'none';
+            }, 5000); // 5000 milliseconds = 5 seconds
+
+        }
+    }  
 </script>
     
 </body>

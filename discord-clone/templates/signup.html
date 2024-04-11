@@ -6,21 +6,27 @@
     <title>Discord Clone</title>
 </head>
 <body>
-<div id = "container">
+<div id="container">
     <h1>Sign Up</h1>
     <h3>{{ message }}</h3>
     <form method="post" action="/signup">
         <label class="textHead">USERNAME</label>
-        <input type="text" name="username" class = "userInputs">
+        <input type="text" name="username" class="userInputs" required>
+        <br>
+        <label class="textHead">FIRSTNAME</label>
+        <input type="text" name="name" class="userInputs" required>
+        <br>
+        <label class="textHead">LAST NAME</label>
+        <input type="text" name="last_name" class="userInputs" required>
         <br>
         <label class="textHead">EMAIL</label>
-        <input type="email" name="email" class = "userInputs">
+        <input type="email" name="email" class="userInputs" required>
         <br>
         <label class="textHead">PASSWORD</label>
-        <input type="password" name="password" class = "userInputs">
+        <input type="password" name="password" class="userInputs" required>
         <br>
         <button type="submit" class="btnDesign">Continue</button>
-        <p>Got an account? <a href ="login.html">Sign in</a></p>
+        <p>Got an account? <a href="login.html">Sign in</a></p>
     </form>
 </div>
 </body>
