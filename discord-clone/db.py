@@ -46,6 +46,15 @@ def save_room(room_name, created_by, is_private=False, members=None):
     
     return room_id
 
+def add_room_admin(room_id, username):
+    room_members_collection.update_one({'_id': {'room_id': ObjectId(room_id), 'username': username}},
+                                       {'$set': {'is_room_admin': True}})
+
+def remove_room_admin(room_id, username):
+    room_members_collection.update_one({'_id': {'room_id': ObjectId(room_id), 'username': username}},
+                                       {'$set': {'is_room_admin': False}})
+def get_room_admins(room_id):
+    return list(room_members_collection.find({'_id.room_id': ObjectId(room_id), 'is_room_admin': True}))   
 def get_or_create_private_chat(user1_username, user2_username):
     # Sort usernames to ensure consistency in naming regardless of who initiates the chat
     sorted_usernames = sorted([user1_username, user2_username])

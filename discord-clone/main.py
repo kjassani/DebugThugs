@@ -11,7 +11,7 @@ from pymongo.errors import DuplicateKeyError
 
 from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_members, \
     remove_room_members, update_room, is_room_admin, save_room, get_messages,save_message, get_all_users, \
-    get_or_create_private_chat
+    get_or_create_private_chat, add_room_admin, remove_room_admin, get_room_admins
 
 app = Flask(__name__)
 app.secret_key = "sfdjkafnk"
@@ -118,7 +118,9 @@ def edit_room(room_id):
     room = get_room(room_id)
     if room and is_room_admin(room_id, current_user.username):
         existing_room_members = [member['_id']['username'] for member in get_room_members(room_id)]
+        existing_room_admins = [admin['_id']['username'] for admin in get_room_admins(room_id)]
         room_members_str = ",".join(existing_room_members)
+        room_admins_str = ",".join(existing_room_admins)
         message = ''
         if request.method == 'POST':
             room_name = request.form.get('room_name')
@@ -132,11 +134,21 @@ def edit_room(room_id):
                 add_room_members(room_id, room_name, members_to_add, current_user.username)
             if len(members_to_remove):
                 remove_room_members(room_id, members_to_remove)
+            new_admins = [username.strip() for username in request.form.get('admins').split(',')]
+            admins_to_add = list(set(new_admins) - set(existing_room_admins))
+            admins_to_remove = list(set(existing_room_admins) - set(new_admins))
+            if len(admins_to_add):
+                for admin in admins_to_add:
+                    add_room_admin(room_id, admin)
+            if len(admins_to_remove):
+                for admin in admins_to_remove:
+                    remove_room_admin(room_id, admin)
             message = 'Room edited successfully'
             room_members_str = ",".join(new_members)
-        return render_template('edit_room.html', room=room, room_members_str=room_members_str, message=message)
+            room_admins_str = ",".join(new_admins)
+        return render_template('edit_room.html', room=room, room_members_str=room_members_str,room_admins_str=room_admins_str, message=message)
     else:
-        return "Room not found", 404
+        return "Acces not allowed: not an admin", 404
 
 
 @app.route('/rooms/<room_id>/')
