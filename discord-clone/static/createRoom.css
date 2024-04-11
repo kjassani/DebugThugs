@@ -1,0 +1,57 @@
+/* General body and overall layout styles */
+body {
+    background-color: #36393F; /* Discord's characteristic dark gray background */
+    color: #DCDDDE; /* Light gray text for high contrast */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* Clean, modern font */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center; /* Center the form on the page */
+    height: 100vh; /* Full height */
+}
+
+/* Header styles */
+h1, h3 {
+    color: #ffffff; /* White color for headers for better visibility */
+}
+
+/* Styling for the form */
+form {
+    background: #2F3136; /* Slightly lighter dark gray for the form background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+    width: 90%;
+    max-width: 400px; /* Suitable width for the form */
+}
+
+label {
+    display: block; /* Ensure the label is a block to move input below the text */
+    color: #B9BBBE; /* Light grey color for labels */
+    margin-bottom: 10px; /* Space below each label */
+}
+
+input[type="text"] {
+    width: 100%; /* Full width inputs */
+    padding: 10px;
+    margin-bottom: 20px; /* Space below each input */
+    border: none;
+    background-color: #40444B; /* Dark background for inputs */
+    color: #DCDDDE; /* Light grey text for inputs */
+    border-radius: 4px; /* Rounded borders for inputs */
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #7289DA; /* Discord blue for the submit button */
+    color: #ffffff; /* White text for the button */
+    border: none;
+    cursor: pointer;
+    border-radius: 4px; /* Rounded corners for the button */
+    transition: background-color 0.3s;
+    width: 100%; /* Full width button */
+}
+
+button:hover {
+    background-color: #677BC4; /* Lighter blue on hover for better interaction feedback */
+}

@@ -1,0 +1,70 @@
+/* General body and overall layout styles */
+body {
+    background-color: #121212; /* Dark background for the body */
+    color: #E0E0E0; /* Light gray text for good contrast on dark background */
+    font-family: Arial, sans-serif; /* Modern, readable font */
+    padding: 20px;
+    margin: 0;
+    display: flex;
+    justify-content: center; /* Center the form on the page */
+}
+
+/* Styling for the edit profile container */
+#edit-profile-container {
+    width: 90%;
+    max-width: 600px; /* Maximum width for the form container */
+    background: #242424; /* Slightly lighter dark shade for the form background */
+    padding: 20px;
+    border-radius: 8px; /* Rounded corners for the form container */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+/* Form and form elements styling */
+h1 {
+    color: #ffffff; /* White color for headings */
+}
+
+.form-group {
+    margin-bottom: 20px; /* Space between form groups */
+}
+
+label {
+    display: block; /* Ensure the label is a block to move input below the text */
+    color: #BDBDBD; /* Lighter grey color for the labels */
+}
+
+input[type="text"],
+input[type="email"] {
+    width: 100%; /* Full width inputs */
+    padding: 8px;
+    margin-top: 5px; /* Space above the input */
+    border: 1px solid #333; /* Subtle border for inputs */
+    background-color: #333333; /* Darker background for inputs */
+    color: #ffffff; /* White text color for inputs */
+    border-radius: 4px; /* Rounded borders for inputs */
+}
+
+button {
+    background-color: #1E88E5; /* Blue background for the button */
+    color: #ffffff; /* White text for the button */
+    border: none;
+    padding: 10px 20px;
+    text-transform: uppercase; /* Uppercase text for the button */
+    border-radius: 4px; /* Rounded corners for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #1565C0; /* Darker blue on hover for the button */
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    #edit-profile-container {
+        padding: 15px; /* Smaller padding for smaller screens */
+    }
+    button {
+        width: 100%; /* Full width button on smaller screens */
+    }
+}
