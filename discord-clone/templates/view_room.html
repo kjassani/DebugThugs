@@ -11,7 +11,10 @@
 <button type="button" id="load_older_messages_btn">Load Older Messages</button>
 <div id="messages">
     {% for message in messages %}
-        <div><b>{{ message.sender }}&nbsp;[{{ message.created_at }}]:&nbsp;</b> {{ message.text }}</div>
+        <div>
+            <b>{{ message.sender }}&nbsp;[{{ message.created_at }}]:&nbsp;</b> {{ message.text }}
+            <button class="delete-button" data-message-id="{{ message._id }}">Delete</button>
+        </div>
     {% endfor %}
 </div>
 
@@ -81,6 +84,24 @@
         newNode.innerHTML = `<b>${username}&nbsp;[${created_at}]:&nbsp;</b> ${message}`;
         const messages_div = document.getElementById('messages');
         messages_div.insertBefore(newNode, messages_div.firstChild);
+        newNode.querySelector('.delete-button').addEventListener('click', function(e) {
+            var messageId = e.target.getAttribute('data-message-id');
+            fetch('/delete_message', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'message_id=' + messageId,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Remove the message from the DOM
+                    messages_div.removeChild(newNode);
+                }
+            });
+        });
+    
     }
 
     window.onbeforeunload = function () {
@@ -112,5 +133,34 @@
         newNode.innerHTML = `<b>${data.username}</b> has left the room`;
         document.getElementById('messages').appendChild(newNode);
     });
+
+    
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var deleteButtons = document.querySelectorAll('.delete-button');
+        deleteButtons.forEach(function(button) {
+            button.addEventListener('click', function(e) {
+                var messageId = e.target.getAttribute('data-message-id');
+                fetch('/delete_message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'message_id=' + messageId,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        
+                        var messageElement = document.getElementById('message_' + messageId);
+                        messageElement.parentNode.removeChild(messageElement);
+                    }
+                });
+            });
+        });
+    });
+</script>
+
 </html>

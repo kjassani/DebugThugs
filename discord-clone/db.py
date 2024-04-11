@@ -143,6 +143,8 @@ def is_room_admin(room_id, username):
 def save_message(room_id, text, sender):
     messages_collection.insert_one({'room_id': room_id, 'text': text, 'sender': sender, 'created_at': datetime.now()})
 
+def delete_message(message_id):
+    messages_collection.delete_one({'_id': ObjectId(message_id)})
 
 MESSAGE_FETCH_LIMIT = 3
 
@@ -155,4 +157,5 @@ def get_messages(room_id, page=0):
         message['created_at'] = message['created_at'].strftime("%d %b, %H:%M")
     return messages[::-1]
 
-
+def get_one_message(message_id):
+     return messages_collection.find_one({'_id': ObjectId(message_id)})

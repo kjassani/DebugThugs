@@ -12,7 +12,7 @@ from pymongo.errors import DuplicateKeyError
 
 from db import get_user, save_user, get_rooms_for_user, get_room, is_room_member, get_room_members, add_room_member, add_room_members, \
     remove_room_members, update_room, is_room_admin, save_room, get_messages,save_message, get_all_users, \
-    get_or_create_private_chat, update_user_profile, add_room_admin, remove_room_admin, get_room_admins
+    get_or_create_private_chat, update_user_profile, add_room_admin, remove_room_admin, get_room_admins, delete_message, get_one_message
 
 app = Flask(__name__)
 app.secret_key = "sfdjkafnk"
@@ -199,6 +199,15 @@ def view_room(room_id):
     else:
         return "Room not found", 404
 
+@app.route('/delete_message', methods=['POST'])
+@login_required
+def handle_delete_message():
+    message_id = request.form.get('message_id')
+    message = get_one_message(message_id)
+    room_id = message['room_id']
+    if is_room_admin(room_id, current_user.username):
+        delete_message(message_id)
+    return redirect(url_for('view_room', message='Message successfully deleted'))
 
 @app.route('/rooms/<room_id>/messages/')
 @login_required
