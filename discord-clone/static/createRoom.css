@@ -1,0 +1,55 @@
+body {
+    background-color: #121212; /* Dark background for the body */
+    color: #E0E0E0; /* Light gray text for good contrast on dark background */
+    font-family: Arial, sans-serif; /* Modern, readable font */
+    padding: 20px;
+    margin: 0;
+    display: flex;
+    justify-content: center; /* Center the form on the page */
+}
+
+/* Header styles */
+h1, h3 {
+    color: #ffffff; /* White color for headers for better visibility */
+}
+
+/* Styling for the form */
+form {
+    background: #242424; /* Slightly lighter dark shade for the form background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    width: 90%;
+    max-width: 500px; /* Moderate width for the form */
+}
+
+label {
+    display: block; /* Ensure the label is a block to move input below the text */
+    color: #BDBDBD; /* Lighter grey color for the labels */
+    margin-bottom: 10px; /* Space below each label */
+}
+
+input[type="text"] {
+    width: 100%; /* Full width inputs */
+    padding: 10px;
+    margin-bottom: 20px; /* Space below each input */
+    border: none;
+    background-color: #333333; /* Darker background for inputs */
+    color: #ffffff; /* White text color for inputs */
+    border-radius: 4px; /* Rounded borders for inputs */
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #1E88E5; /* Blue background for the button */
+    color: #ffffff; /* White text for the button */
+    border: none;
+    cursor: pointer;
+    border-radius: 4px; /* Rounded corners for the button */
+    transition: background-color 0.3s;
+    width: 100%; /* Full width button for a clean look */
+}
+
+button:hover {
+    background-color: #1565C0; /* Darker blue on hover for the button */
+}
