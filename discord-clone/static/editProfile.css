@@ -1,0 +1,67 @@
+
+body {
+    background-color: #36393E; 
+    color: white;
+    font-family: sans-serif; 
+    padding: 20px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+
+#edit-profile-container {
+    width: 90%;
+    max-width: 600px; 
+    background-color: #282B30; 
+    padding: 20px;
+    border-radius: 7px;
+}
+
+
+h1 {
+    color: white;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block; 
+    color: white;
+}
+
+#name,#last_name,#email {
+    width: 95%; 
+    padding: 8px;
+    margin-top: 5px; 
+    background-color: #36393E; 
+    color: white; 
+    border-radius: 7px;
+}
+
+button {
+    background-color: #7289da;
+    color: white; 
+    border: 2px solid #637cd6;
+    padding: 10px 20px;
+    border-radius: 7px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #637cd6;
+}
+
+#backbtn{
+    display: inline-block;
+    position: flex;
+    background-color: #981b1b;
+    border-color: #8d1919;
+
+}
+#backbtn:hover{
+    background-color: #8d1919;
+}
+

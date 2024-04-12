@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='editRoom.css') }}">
     <title>My Chat App</title>
 </head>
 <body>
@@ -18,6 +19,7 @@
     <input type="text" name="admins" value="{{ room_admins_str }}">
     <br>
     <button type="submit">Submit</button>
+    <a href="."><button id ="backbtn" type="button">Back</button></a>
 </form>
 </body>
 </html>

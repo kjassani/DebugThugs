@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='viewRoom.css') }}">
     <title>My Chat App</title>
 </head>
 <body>
 <h1>Welcome to chat: {{ room.name }}</h1>
 
 
-<button type="button" id="load_older_messages_btn">Load Older Messages</button>
+<button type="button" class = "btnDesign" id="load_older_messages_btn">Load Older Messages</button>
 <div id="messages">
     {% for message in messages %}
         <div>
@@ -20,10 +21,12 @@
 
 <form id="message_input_form">
     <input type="text" id="message_input" placeholder="Enter your message here">
-    <button type="submit">Send</button>
+    <button class = "btnDesign" type="submit">Send</button>
 </form>
-
-    <a href="edit"><button type="button">Edit Room</button></a>
+<div class="btns">
+    <a href="/"><button id = "backbtn" class = "btnDesign" type="button">Back</button></a>
+    <a href="edit"><button id = "editbtn" class = "btnDesign" type="button">Edit Room</button></a>
+</div>  
 
 <h3>Members</h3>
 <ul>

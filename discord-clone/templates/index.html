@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Discord Clone</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='page_main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
 </head>
+<body>
 <body>
 <!-- Message Display Area -->
 {% if message %}
@@ -14,76 +15,48 @@
 </div>
 {% endif %}
 <div id="page">
-<div id="page">
     <div id="sidebar">
-      <div id="sidebar_left">
-        <div id="but">
-            <a href="page_friends.html"><img src="{{ url_for('static', filename='icon_server.png') }}"></a>
-        </div>
-        <div id="but">
-            <a href="page_friends.html"><img src="{{ url_for('static', filename='icon_friends.png') }}"></a>
-        </div>
-      </div>
-      <div id="sidebar_right">
         <!-- Channels Section -->
         <div id="channels_section">
-          <div id="sidebar_right_header">
-            <h1>Channels</h1>
-          </div>
-          <div id="sidebar_right_content">
-            {% if current_user.is_authenticated %}
-              <ul>
-                  {% for room in rooms %}
-                      <li><a href="/rooms/{{ room['_id'] }}">{{ room['name'] }}</a></li>
-                  {% endfor %}
-              </ul>
-              <a href="/create-room" class="btn">Create Room</a>
-              <a href="/rooms/6618489b14d6b21ccee19216/" class="btn">Main Room</a>
-
-            {% endif %}
-          </div>
+            <div id="sidebar_right_header">
+                <h1>Channels</h1>
+              </div>
+              <div id="sidebar_right_content">
+                {% if current_user.is_authenticated %}
+                  <ul>
+                {% for room in rooms %}
+                <li><a href="/rooms/{{ room['_id'] }}">{{ room['name'] }}</a></li>
+                {% endfor %}
+                  </ul>
+                  <a href="/create-room" class="btn">Create Room</a>
+                  <a href="/rooms/6618489b14d6b21ccee19216/" class="btn">Main Room</a>
+                {% endif %}
+              </div>
         </div>
         <!-- Friends Section -->
         <div id="friends_section">
-          <div id="sidebar_right_header">
-            <h1>Friends</h1>
-          </div>
-          <div id="sidebar_right_content">
-            {% if current_user.is_authenticated %}
-              <ul>
-                  {% for user in users %}
-                      <li><a href="javascript:void(0);" onclick="startPrivateChat('{{ user['_id'] }}')">{{ user['_id'] }}</a></li>
-                  {% endfor %}
-              </ul>
-            {% endif %}
-          </div>
+              <div id="sidebar_right_header">
+                <h1>Friends</h1>
+              </div>
+              <div id="sidebar_right_content">
+                {% if current_user.is_authenticated %}
+                  <ul>
+                {% for user in users %}
+                <li><a href="javascript:void(0);" onclick="startPrivateChat('{{ user['_id'] }}')">{{ user['_id'] }}</a></li>
+                {% endfor %}
+                  </ul>
+                {% endif %}
+              </div>
         </div>
         <div id="sidebar_right_footer">
-          <div id="profile_info">
-            <h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3>
-          </div>
-          <!-- Existing Settings Icon -->
-          <a href="edit_profile.html"><img id="icon_settings" src="{{ url_for('static', filename='icon_settings.png') }}"></a>
-          <!-- Add a direct link to the Edit Profile Page -->
-          <a href="/edit_profile" class="btn">Edit Profile</a>
-        </div>
-    </div>
-    <div id="content_main">
-      <div id="content_main_header">
-        <div id="top_title">
-          <h1>Main Server</h1>
+              <div id="profile_info">
+                <h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3>
+              </div>
+              <!-- Add a direct link to the Edit Profile Page -->
+              <a href="/edit_profile" id="editBtn" class="btn">Edit Profile</a>
         </div>
       </div>
-      <div id="content_main_body">
-        <!-- Content dynamically loaded based on the selected room -->
-      </div>
-      <div id="content_main_footer">
-        <div id="chat_entry">
-            <textarea id="input_chat_entry" placeholder="Type a message!"></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
+</div>
   <script>
     function startPrivateChat(username) {
       fetch(`/start_private_chat/${username}`)
@@ -111,6 +84,8 @@
         }
     }  
 </script>
+    
+</body>
     
 </body>
 </html>
