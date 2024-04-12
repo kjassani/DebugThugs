@@ -26,7 +26,9 @@
 </form>
 <div class="btns">
     <a href="/"><button id = "backbtn" class = "btnDesign" type="button">Back</button></a>
-    <a href="edit"><button id = "editbtn" class = "btnDesign" type="button">Edit Room</button></a>
+    {% if is_room_admin %} <!-- Check if user is an admin -->
+        <a href="edit"><button id = "editbtn" class = "btnDesign" type="button">Edit Room</button></a>
+    {% endif %}
 </div>  
 
 <h3>Members</h3>
