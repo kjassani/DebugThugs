@@ -2,90 +2,103 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Discord Clone</title>
+    <title>Echoes by DebugThugs</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400&display=swap" rel="stylesheet">
 </head>
 <body>
-<body>
+<header>
+    <h1><span id="app-name">Echoes</span> <span id="group-name">by DebugThugs</span></h1>
+</header>
+
 <!-- Message Display Area -->
 {% if message %}
 <div id="message-container" style="background-color: #f8d7da; color: #721c24; text-align: center; padding: 10px; margin-bottom: 10px;">
     {{ message }}
 </div>
 {% endif %}
+
+<!-- Primary Action Buttons -->
+<div id="primary-actions">
+    {% if current_user.is_authenticated %}
+    <a href="/create-room" class="btn">Create Room</a>
+    <a href="/rooms/6618489b14d6b21ccee19216/" class="btn">Main Room</a>
+    {% endif %}
+</div>
+
 <div id="page">
     <div id="sidebar">
         <!-- Channels Section -->
         <div id="channels_section">
             <div id="sidebar_right_header">
                 <h1>Channels</h1>
-              </div>
-              <div id="sidebar_right_content">
+            </div>
+            <div id="sidebar_right_content">
                 {% if current_user.is_authenticated %}
-                  <ul>
-                {% for room in rooms %}
-                <li><a href="/rooms/{{ room['_id'] }}">{{ room['name'] }}</a></li>
-                {% endfor %}
-                  </ul>
-                  <a href="/create-room" class="btn">Create Room</a>
-                  <a href="/rooms/6618489b14d6b21ccee19216/" class="btn">Main Room</a>
+                <ul>
+                  {% for room in rooms %}
+                    <li><a href="/rooms/{{ room['_id'] }}">{{ room['name'] }}</a></li>
+                  {% endfor %}
+                </ul>
                 {% endif %}
-              </div>
+            </div>
         </div>
         <!-- Friends Section -->
         <div id="friends_section">
-              <div id="sidebar_right_header">
+            <div id="sidebar_right_header">
                 <h1>Friends</h1>
-              </div>
-              <div id="sidebar_right_content">
+            </div>
+            <div id="sidebar_right_content">
                 {% if current_user.is_authenticated %}
-                  <ul>
-                {% for user in users %}
-                <li><a href="javascript:void(0);" onclick="startPrivateChat('{{ user['_id'] }}')">{{ user['_id'] }}</a></li>
-                {% endfor %}
-                  </ul>
+                <ul>
+                  {% for user in users %}
+                    <li><a href="javascript:void(0);" onclick="startPrivateChat('{{ user['_id'] }}')">{{ user['_id'] }}</a></li>
+                  {% endfor %}
+                </ul>
                 {% endif %}
-              </div>
+            </div>
         </div>
         <div id="sidebar_right_footer">
-              <div id="profile_info">
-                <h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3>
-              </div>
-              <!-- Add a direct link to the Edit Profile Page -->
-              <a href="/edit_profile" id="editBtn" class="btn">Edit Profile</a>
-        </div>
+          <div id="profile_info">
+              <h3>Hello {% if current_user.is_authenticated %}{{ current_user.username }}{% else %}Guest{% endif %}!</h3>
+              <!-- User Action Buttons -->
+              {% if current_user.is_authenticated %}
+                  <a href="/edit_profile" class="btn">Edit Profile</a>
+                  <a href="/logout" class="btn">Log Out</a>
+              {% else %}
+                  <a href="/login" class="btn">Log In</a>
+              {% endif %}
+          </div>
       </div>
+      
+    </div>
 </div>
-  <script>
+<script>
     function startPrivateChat(username) {
-      fetch(`/start_private_chat/${username}`)
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Failed to start private chat');
-          }
-          return response.json();
-      })
-      .then(data => {
-          window.location.href = `/rooms/${data.room_id}`;
-      })
-      .catch(error => {
-          console.error('Error starting private chat:', error);
-          alert('Error starting private chat. Please try again.');
-      });
-  }
+        fetch(`/start_private_chat/${username}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to start private chat');
+            }
+            return response.json();
+        })
+        .then(data => {
+            window.location.href = `/rooms/${data.room_id}`;
+        })
+        .catch(error => {
+            console.error('Error starting private chat:', error);
+            alert('Error starting private chat. Please try again.');
+        });
+    }
     window.onload = function() {
         const messageContainer = document.getElementById('message-container');
         if (messageContainer) {
             setTimeout(function() {
                 messageContainer.style.display = 'none';
             }, 5000); // 5000 milliseconds = 5 seconds
-
         }
-    }  
+    }
 </script>
-    
-</body>
-    
 </body>
 </html>
