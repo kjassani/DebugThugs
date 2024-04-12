@@ -126,9 +126,20 @@ def remove_room_members(room_id, usernames):
 def get_room_members(room_id):
     return list(room_members_collection.find({'_id.room_id': ObjectId(room_id)}))
 
-
 def get_rooms_for_user(username):
-    return list(room_members_collection.find({'_id.username': username}))
+    member_rooms = list(room_members_collection.find({'_id.username': username}))
+    room_ids = [member['_id']['room_id'] for member in member_rooms]
+    
+    all_rooms = list(rooms_collection.find({'_id': {'$in': room_ids}}))
+
+    main_server_room_id = ObjectId('6618489b14d6b21ccee19216')
+
+    # Filter out private rooms and the Main Server room
+    rooms = [room for room in all_rooms if not room.get('is_private', False) and room['_id'] != main_server_room_id]
+
+    return rooms
+
+
 
 
 def is_room_member(room_id, username):
