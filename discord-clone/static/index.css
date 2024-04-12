@@ -1,0 +1,66 @@
+body {
+    background-color: #282B30; 
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+
+#sidebar {
+    margin-left: 15vh;
+    background-color: #36393E;
+    padding-bottom: 10vh;
+}
+
+#sidebar_right_header h1, #sidebar_right_footer h3 {
+    color: white;
+}
+h1{
+    margin-top: 2vh;
+    margin-left: 1vh;
+}
+#sidebar_right_content ul li a {
+    color: lightgrey;
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+}
+li{
+    list-style-type: none;
+}
+
+#sidebar_right_content ul li a:hover {
+    background-color: #333;
+}
+
+.btn {
+    position: relative;
+    margin-left: 1vh;
+    background-color: #7289da;
+    color: white;
+    border: 2px solid #637cd6;
+    padding: 5px 10px;
+    text-decoration: none;
+    border-radius: 7px;
+    display: inline-block;
+}
+
+.btn:hover {
+    background-color: #637cd6;
+}
+
+.channels_section, .friends_section {
+    border-top: 1px solid #444;
+    padding-top: 10px;
+}
+
+#editBtn{
+    position:absolute;
+    bottom: 4vh;
+    margin-left: 18vh;
+}
+h3{
+    position:absolute;
+    bottom: 5vh;
+    margin-left: 2vh;
+}
+

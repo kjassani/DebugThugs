@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='editProfile.css') }}">
     <title>Edit Profile</title>
     <!-- Ensure the CSS path is correct or adapt as needed -->
     <!--link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"-->
@@ -28,6 +29,7 @@
             <input type="email" id="email" name="email" value="{{ user.email }}" required>
         </div>
         <button type="submit">Update Profile</button>
+        <a href="/"><button id = "backbtn" type="button">Back</button></a>
     </form>
 </div>
 </body>

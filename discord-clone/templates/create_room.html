@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='createRoom.css') }}">
     <title>Discord clone</title>
 </head>
 <body>
@@ -9,12 +10,13 @@
 <h3>{{ message }}</h3>
 <form method="post">
     <label>Room Name:</label>
-    <input type="text" name="room_name">
+    <input id="textdesign" type="text" name="room_name">
     <br>
     <label>Members:</label>
-    <input type="text" name="members">
+    <input id="textdesign" type="text" name="members">
     <br>
-    <button type="submit">Submit</button>
+    <button class="btndesign" type="submit">Submit</button>
+    <a href="/"><button id ="backbtn" class="btndesign" type="button">Back</button></a>
 </form>
 </body>
 </html>
